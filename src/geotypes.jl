@@ -124,10 +124,10 @@ end
 geometries(collection::GeometryCollection) = collection.geometries
 
 type Feature <: AbstractFeature
-    geometry::Union(Nothing, AbstractGeometry)
-    properties::Union(Nothing, Dict{String,Any})
+    geometry::Union{Nothing, AbstractGeometry}
+    properties::Union{Nothing, Dict{String,Any}}
 end
-Feature(geometry::Union(Nothing,GeoInterface.AbstractGeometry)) = Feature(geometry, Dict{String,Any}())
+Feature(geometry::Union{Nothing,GeoInterface.AbstractGeometry}) = Feature(geometry, Dict{String,Any}())
 Feature(properties::Dict{String,Any}) = Feature(nothing, properties)
 geometry(feature::Feature) = feature.geometry
 properties(feature::Feature) = feature.properties
@@ -136,11 +136,10 @@ crs(feature::Feature) = get(feature.properties, "crs", nothing)
 
 type FeatureCollection{T <: AbstractFeature} <: AbstractFeatureCollection
     features::Vector{T}
-    bbox::Union(Nothing, BBox)
-    crs::Union(Nothing, CRS)
+    bbox::Union{Nothing, BBox}
+    crs::Union{Nothing, CRS}
 end
 FeatureCollection{T <: AbstractFeature}(fc::Vector{T}) = FeatureCollection(fc, nothing, nothing)
 features(fc::FeatureCollection) = fc.features
 bbox(fc::FeatureCollection) = fc.bbox
 crs(fc::FeatureCollection) = fc.crs
-
