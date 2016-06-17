@@ -24,19 +24,19 @@ hasz(p::Position) = length(p) >= 3
 coordinates(obj::Position) = obj
 
 coordinates(obj::Vector{Position}) = obj
-coordinates{T <: AbstractPosition}(obj::Vector{T}) =                    Position[map(coordinates, obj)...]
-coordinates{T <: AbstractPoint}(obj::Vector{T}) =                       Position[map(coordinates, obj)...]
+coordinates{T <: AbstractPosition}(obj::Vector{T}) =                    map(coordinates, obj)
+coordinates{T <: AbstractPoint}(obj::Vector{T}) =                       map(coordinates, obj)
 
 coordinates(obj::Vector{Vector{Position}}) = obj
-coordinates{T <: AbstractPosition}(obj::Vector{Vector{T}}) =            Vector{Position}[map(coordinates, obj)...]
-coordinates{T <: AbstractPoint}(obj::Vector{Vector{T}}) =               Vector{Position}[map(coordinates, obj)...]
-coordinates{T <: AbstractLineString}(obj::Vector{T}) =                  Vector{Position}[map(coordinates, obj)...]
+coordinates{T <: AbstractPosition}(obj::Vector{Vector{T}}) =            map(coordinates, obj)
+coordinates{T <: AbstractPoint}(obj::Vector{Vector{T}}) =               map(coordinates, obj)
+coordinates{T <: AbstractLineString}(obj::Vector{T}) =                  map(coordinates, obj)
 
 coordinates(obj::Vector{Vector{Vector{Position}}}) = obj
-coordinates{T <: AbstractPosition}(obj::Vector{Vector{Vector{T}}}) =    Vector{Vector{Position}}[map(coordinates, obj)...]
-coordinates{T <: AbstractPoint}(obj::Vector{Vector{Vector{T}}}) =       Vector{Vector{Position}}[map(coordinates, obj)...]
-coordinates{T <: AbstractLineString}(obj::Vector{Vector{T}}) =          Vector{Vector{Position}}[map(coordinates, obj)...]
-coordinates{T <: AbstractPolygon}(obj::Vector{T}) =                     Vector{Vector{Position}}[map(coordinates, obj)...]
+coordinates{T <: AbstractPosition}(obj::Vector{Vector{Vector{T}}}) =    map(coordinates, obj)
+coordinates{T <: AbstractPoint}(obj::Vector{Vector{Vector{T}}}) =       map(coordinates, obj)
+coordinates{T <: AbstractLineString}(obj::Vector{Vector{T}}) =          map(coordinates, obj)
+coordinates{T <: AbstractPolygon}(obj::Vector{T}) =                     map(coordinates, obj)
 
 type Point <: AbstractPoint
     coordinates::Position
@@ -123,12 +123,12 @@ type GeometryCollection <: AbstractGeometryCollection
 end
 geometries(collection::GeometryCollection) = collection.geometries
 
-type Feature <: AbstractFeature
+type Feature{T <: AbstractString} <: AbstractFeature
     geometry::@compat(Union{Void, AbstractGeometry})
-    properties::@compat(Union{Void, Dict{@compat(AbstractString),Any}})
+    properties::@compat(Union{Void, Dict{@compat(T),Any}})
 end
 Feature(geometry::@compat(Union{Void,GeoInterface.AbstractGeometry})) = Feature(geometry, Dict{@compat(AbstractString),Any}())
-Feature(properties::Dict{@compat(AbstractString),Any}) = Feature(nothing, properties)
+Feature{T <: AbstractString}(properties::Dict{@compat(T),Any}) = Feature(nothing, properties)
 geometry(feature::Feature) = feature.geometry
 properties(feature::Feature) = feature.properties
 bbox(feature::Feature) = get(feature.properties, "bbox", nothing)
